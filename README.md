@@ -170,6 +170,16 @@ Create a dedicated AMP user (e.g. `discord-bot`) with a role that has:
 **File Manager:** Browse Files, Download Files  
 **Instances:** Manage (on each target instance)
 
+## Updating
+
+```bash
+cd /opt/amp-discord-bot
+git pull
+systemctl restart amp-discord-bot
+```
+
+The `.env` and `venv` are not tracked by git and will not be affected.
+
 ## Running as a service
 
 ```bash
