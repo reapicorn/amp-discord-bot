@@ -1,0 +1,28 @@
+# --- AMP identity (required) ---
+amp_url: "http://YOUR_AMP_URL:8080"
+amp_user: "YOUR_AMP_USER"
+amp_pass: "YOUR_AMP_PASSWORD"
+instance_id: "YOUR_INSTANCE_ID"
+
+# --- Display (optional) ---
+# name:    default = filename without extension (e.g. "projectzomboid")
+# emoji:   default = "🎮"
+name: "Project Zomboid"
+emoji: "🧟"
+
+# --- Discord channels (optional) ---
+# channel_commands:      default = "server-commands"
+# channel_notifications: default = "server-notifications"
+# admin_role:            default = global admin_role from config.yaml
+channel_commands: "pz-commands"
+channel_notifications: "pz-notifications"
+admin_role: "PZ Admin"
+
+# --- Addon (optional) ---
+# addon: default = null (no game-specific features)
+addon: "projectzomboid"
+addon_config:
+  # server_config_path:      default = "Zomboid/Server/servertest.ini"
+  # workshop_check_interval: default = 1800 (30 minutes)
+  server_config_path: "Zomboid/Server/servertest.ini"
+  workshop_check_interval: 1800
