@@ -12,8 +12,11 @@ class ModWatcher(GameAddon):
     game_emoji = "🧟"
 
     def __init__(self, bot: commands.Bot, server_cfg: dict):
+        # Give each instance a unique Cog name so multiple PZ instances can coexist
+        self.__cog_name__ = f"ModWatcher:{server_cfg['name']}"
         super().__init__()
         self.bot = bot
+        self._instance_name: str = server_cfg["name"]
         self.notification_channel: str = server_cfg["channel_notifications"]
         addon_cfg = server_cfg["addon_config"]
         self.server_config_path: str = addon_cfg["server_config_path"]
@@ -39,16 +42,16 @@ class ModWatcher(GameAddon):
     async def _check_updates(self):
         channel = discord.utils.get(self.bot.get_all_channels(), name=self.notification_channel)
         if channel is None:
-            print(f"[pz/mod_watcher] Channel '{self.notification_channel}' not found")
+            print(f"[pz/mod_watcher/{self._instance_name}] Channel '{self.notification_channel}' not found")
             return
         mod_ids = read_workshop_ids(self.amp_client, self.server_config_path)
         if not mod_ids:
-            print("[pz/mod_watcher] No mods found in server config")
+            print(f"[pz/mod_watcher/{self._instance_name}] No mods found in server config")
             return
-        print(f"[pz/mod_watcher] Checking {len(mod_ids)} mods...")
+        print(f"[pz/mod_watcher/{self._instance_name}] Checking {len(mod_ids)} mods...")
         try:
             updated = steam.check_for_updates(mod_ids)
-            print(f"[pz/mod_watcher] {len(updated)} mods updated." if updated else "[pz/mod_watcher] No changes.")
+            print(f"[pz/mod_watcher/{self._instance_name}] {len(updated)} mods updated." if updated else f"[pz/mod_watcher/{self._instance_name}] No changes.")
             if updated:
                 header = "🔧 **Mods updated — server restart recommended:**"
                 lines = [

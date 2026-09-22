@@ -111,6 +111,57 @@ Addons extend the bot with game-specific functionality. Set `addon: "<name>"` in
 2. Restart the bot — it loads all instance files automatically
 3. Optionally set `addon: "yourgame"` to attach game-specific features
 
+## Running multiple instances of the same game
+
+Each file in `instances/` is an independent server — you can have as many as you need, including multiple servers running the same game.
+
+**Example: two Project Zomboid servers**
+
+`instances/projectzomboid.yaml`:
+```yaml
+amp_url: "${AMP_URL}"
+amp_user: "${AMP_USER}"
+amp_pass: "${AMP_PASS}"
+instance_id: "${AMP_PZ1_INSTANCE_ID}"
+
+name: "Project Zomboid"
+emoji: "🧟"
+channel_commands: "pz-commands"
+channel_notifications: "pz-notifications"
+admin_role: "PZ Admin"
+addon: "projectzomboid"
+addon_config:
+  server_config_path: "Zomboid/Server/servertest.ini"
+```
+
+`instances/projectzomboid2.yaml`:
+```yaml
+amp_url: "${AMP_URL}"
+amp_user: "${AMP_USER}"
+amp_pass: "${AMP_PASS}"
+instance_id: "${AMP_PZ2_INSTANCE_ID}"
+
+name: "Project Zomboid 2"
+emoji: "🧟"
+channel_commands: "pz2-commands"
+channel_notifications: "pz2-notifications"
+admin_role: "PZ Admin"
+addon: "projectzomboid"
+addon_config:
+  server_config_path: "Zomboid/Server/servertest2.ini"
+```
+
+`.env`:
+```env
+AMP_PZ1_INSTANCE_ID=uuid-of-first-pz-instance
+AMP_PZ2_INSTANCE_ID=uuid-of-second-pz-instance
+```
+
+**Rules:**
+- `channel_commands` and `channel_notifications` must be unique across all instances — the bot uses the channel name to route commands
+- `name` must be unique — it is used as the internal key for the AMP client cache
+- Each instance gets its own independent mod watcher loop and notification channel
+
 ## AMP user permissions
 
 Create a dedicated AMP user (e.g. `discord-bot`) with a role that has:
