@@ -1,8 +1,4 @@
-# Configuracion con credenciales reales - nunca commitear
-config.yaml
-instances/*.yaml
-
-# Estado del mod watcher
+# Runtime state
 workshop_state.json
 
 # Python
@@ -11,3 +7,4 @@ __pycache__/
 *.pyo
 venv/
 .env
+
