@@ -99,26 +99,25 @@ addon: null                    # game-specific addon module name
 addon_config: {}
 ```
 
-## Adding a new game
+## Addons
+
+Addons extend the bot with game-specific functionality. Set `addon: "<name>"` in an instance YAML to activate one.
+
+| Addon | Description | Docs |
+|---|---|---|
+| `projectzomboid` | Steam Workshop mod update notifications | [README](addons/projectzomboid/README.md) |
+
+### Writing a new addon
+
+1. Create `addons/yourgame/__init__.py` with an `async def setup(bot, server_cfg)` function that registers your Cogs and returns the main Cog
+2. Set `addon: "yourgame"` in the instance YAML
+3. Restart the bot
+
+## Adding a new game server
 
 1. Create `instances/yourgame.yaml` with the required fields
 2. Restart the bot — it loads all instance files automatically
-3. Optionally create `addons/yourgame/` with a `setup(bot, server_cfg)` function
-
-## Project Zomboid addon
-
-When `addon: "projectzomboid"` is set, the bot:
-
-- Reads `WorkshopItems` from `servertest.ini` via the AMP File Manager API
-- Polls Steam Workshop every 30 minutes (configurable)
-- Posts a message to `channel_notifications` when any mod is updated
-
-```yaml
-addon: "projectzomboid"
-addon_config:
-  server_config_path: "Zomboid/Server/servertest.ini"
-  workshop_check_interval: 1800
-```
+3. Optionally set `addon: "yourgame"` to attach game-specific features
 
 ## AMP user permissions
 
