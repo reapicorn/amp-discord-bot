@@ -60,6 +60,11 @@ class Management(commands.Cog):
             for role in allowed_roles
         )
 
+    def _log_command(self, interaction: discord.Interaction, command: str):
+        user = f"{interaction.user} ({interaction.user.id})"
+        channel = f"#{interaction.channel.name}"
+        print(f"[cmd] {command} by {user} in {channel}")
+
     async def _reject_wrong_channel(self, interaction: discord.Interaction) -> bool:
         """Replies with an error if the channel doesn't match any server. Returns True to abort."""
         if self._get_server(interaction) is None:
@@ -90,6 +95,7 @@ class Management(commands.Cog):
         if await self._reject_wrong_channel(interaction):
             return
         cfg, client = self._get_server(interaction)
+        self._log_command(interaction, "status")
         await interaction.response.defer()
         try:
             data = client.get_status()
@@ -121,6 +127,7 @@ class Management(commands.Cog):
         cfg, client = self._get_server(interaction)
         if await self._reject_non_admin(interaction, cfg):
             return
+        self._log_command(interaction, "start")
         await interaction.response.defer()
         try:
             client.start()
@@ -135,6 +142,7 @@ class Management(commands.Cog):
         cfg, client = self._get_server(interaction)
         if await self._reject_non_admin(interaction, cfg):
             return
+        self._log_command(interaction, "stop")
         await interaction.response.defer()
         try:
             client.stop()
@@ -149,6 +157,7 @@ class Management(commands.Cog):
         cfg, client = self._get_server(interaction)
         if await self._reject_non_admin(interaction, cfg):
             return
+        self._log_command(interaction, "restart")
         await interaction.response.defer()
         try:
             client.restart()
@@ -163,6 +172,7 @@ class Management(commands.Cog):
         cfg, client = self._get_server(interaction)
         if await self._reject_non_admin(interaction, cfg):
             return
+        self._log_command(interaction, "update")
         await interaction.response.defer()
         try:
             client.update()
