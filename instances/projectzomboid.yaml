@@ -1,8 +1,8 @@
 # --- AMP identity (required) ---
-amp_url: "http://YOUR_AMP_URL:8080"
-amp_user: "YOUR_AMP_USER"
-amp_pass: "YOUR_AMP_PASSWORD"
-instance_id: "YOUR_INSTANCE_ID"
+amp_url: "${AMP_URL}"
+amp_user: "${AMP_USER}"
+amp_pass: "${AMP_PASS}"
+instance_id: "${AMP_INSTANCE_ID}"
 
 # --- Display (optional) ---
 # name:    default = filename without extension (e.g. "projectzomboid")

@@ -26,36 +26,28 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure the bot
+### 2. Set up environment variables
 
-Copy the example config and fill in your values:
+Copy `.env.example` to `.env` and fill in your credentials:
 
 ```bash
-cp config.yaml.example config.yaml
+cp .env.example .env
 ```
 
-```yaml
-# config.yaml
-discord_token: "YOUR_DISCORD_TOKEN"
-admin_role: "Game Admin"
+```env
+DISCORD_TOKEN=your_discord_bot_token
+
+AMP_URL=http://YOUR_AMP_HOST:8080
+AMP_USER=discord-bot
+AMP_PASS=your_amp_password
+AMP_INSTANCE_ID=your_instance_uuid
 ```
+
+Load the `.env` file before running the bot (or configure it in your systemd service — see [Running as a service](#running-as-a-service)).
 
 ### 3. Configure instances
 
-Each game server is a YAML file in `instances/`. Copy the example:
-
-```bash
-cp instances/projectzomboid.yaml.example instances/projectzomboid.yaml
-```
-
-Fill in your AMP credentials and instance ID:
-
-```yaml
-amp_url: "http://YOUR_AMP_HOST:8080"
-amp_user: "discord-bot"
-amp_pass: "your-password"
-instance_id: "your-instance-uuid"
-```
+Each game server is a YAML file in `instances/`. The default `instances/projectzomboid.yaml` references environment variables — edit it if you need to rename the variables or add more instances.
 
 The bot loads all `*.yaml` files from `instances/` automatically.
 
@@ -140,6 +132,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/amp-discord-bot
 Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/opt/amp-discord-bot/.env
 ExecStart=/opt/amp-discord-bot/venv/bin/python3 bot.py
 Restart=always
 RestartSec=10
@@ -151,3 +144,5 @@ EOF
 systemctl enable amp-discord-bot
 systemctl start amp-discord-bot
 ```
+
+The `EnvironmentFile` directive loads `/opt/amp-discord-bot/.env` automatically — no need to `source` it manually.

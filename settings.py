@@ -1,7 +1,10 @@
 """
 Loads global configuration (config.yaml) and all instances (instances/*.yaml).
 Applies defaults to optional fields of each instance.
+Resolves ${ENV_VAR} references in string values.
 """
+import os
+import re
 from pathlib import Path
 
 import yaml
@@ -37,9 +40,32 @@ _ADDON_CONFIG_DEFAULTS = {
 #  Loaders                                                             #
 # ------------------------------------------------------------------ #
 
+_ENV_VAR_RE = re.compile(r"\$\{([^}]+)\}")
+
+
+def _resolve_env_vars(value):
+    """
+    Recursively resolve ${ENV_VAR} references in strings within a dict/list.
+    Raises ValueError if a referenced variable is not set.
+    """
+    if isinstance(value, str):
+        def replace(match):
+            var = match.group(1)
+            if var not in os.environ:
+                raise ValueError(f"Environment variable '{var}' is not set")
+            return os.environ[var]
+        return _ENV_VAR_RE.sub(replace, value)
+    if isinstance(value, dict):
+        return {k: _resolve_env_vars(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_resolve_env_vars(v) for v in value]
+    return value
+
+
 def _load_yaml(path: Path) -> dict:
     with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+        data = yaml.safe_load(f) or {}
+    return _resolve_env_vars(data)
 
 
 def _apply_instance_defaults(data: dict, filename: str) -> dict:
